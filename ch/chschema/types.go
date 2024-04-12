@@ -187,6 +187,9 @@ func ColumnFactory(chType string, typ reflect.Type) NewColumnFunc {
 			return NewArrayEnumColumn
 		}
 	}
+	if isDecimalType(chType) {
+		return NewFloat64Column
+	}
 	if isDateTime64Type(chType) {
 		return NewDateTime64Column
 	}
@@ -335,6 +338,10 @@ func chDateTimeType(s string) string {
 		internal.Logger.Printf("DateTime has timezeone=%q, expected UTC", s)
 	}
 	return chtype.DateTime
+}
+
+func isDecimalType(s string) bool {
+	return chSubType(s, "Decimal(") != ""
 }
 
 func isDateTime64Type(s string) bool {
